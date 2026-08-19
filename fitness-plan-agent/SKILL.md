@@ -28,7 +28,18 @@ description: 把随手收藏的健身视频链接（小红书/抖音/YouTube/B�
 | `plan.html` | 给用户看的**单页应用**（可视化计划 + 编辑档案表单），每次更新都重新生成并重新发布 Artifact |
 | `intake_log.md` | 每次处理一个新链接的过程记录（识别结果、判定、最终决定），用户可读可纠错 |
 
-首次运行时，若目录下没有这些文件，先执行「Step 0 建档」再继续。
+首次运行时，若目录下没有这些文件，**先从这个 Skill 自带的 `templates/` 目录复制过去，不要从零现写**（模板路径：这份 `SKILL.md` 同目录下的 `templates/`）：
+
+```bash
+mkdir -p ~/Documents/fitness-plan-agent-data
+cp templates/plan.html ~/Documents/fitness-plan-agent-data/plan.html
+cp templates/moves_library.example.json ~/Documents/fitness-plan-agent-data/moves_library.json
+cp templates/training_plan.example.json ~/Documents/fitness-plan-agent-data/training_plan.json
+cp templates/CURRENT_PLAN.example.md ~/Documents/fitness-plan-agent-data/CURRENT_PLAN.md
+cp templates/intake_log.example.md ~/Documents/fitness-plan-agent-data/intake_log.md
+```
+
+`profile.json` 不从模板复制，走「Step 0 建档」生成真实数据（`templates/profile.example.json` 只是给自己看字段长什么样用的参考）。复制完再执行「Step 0 建档」。
 
 **多用户**：这是本地文件方案，不是云端服务，每个人各自在自己的 Claude 里跑这个 Skill、各自有一份 `~/Documents/fitness-plan-agent-data/`，互不干扰。`plan.html` 链接可以发给任何人自助建档，但生成的 `profile.json` 需要对方自己带回自己的 Skill 环境里，不会自动汇总到你这边。
 
@@ -194,7 +205,7 @@ description: 把随手收藏的健身视频链接（小红书/抖音/YouTube/B�
 
 `CURRENT_PLAN.md` 更新的同时，`plan.html` 也要跟着更新，内容必须一致，不能一个改了一个没改。
 
-**做法**：不要每次从零设计页面，用已有的 `~/Documents/fitness-plan-agent-data/plan.html` 当模板，只改文件里的两个数据对象，页面其余的 CSS/HTML/JS（身体示意图渲染逻辑、编辑表单、卡片预览、标签切换）都不用动：
+**做法**：不要每次从零设计页面，用已有的 `~/Documents/fitness-plan-agent-data/plan.html` 当模板，只改文件里的两个数据对象，页面其余的 CSS/HTML/JS（身体示意图渲染逻辑、编辑表单、卡片预览、标签切换）都不用动。如果这个文件丢了/损坏了，从 Skill 自带的 `templates/plan.html` 重新复制一份（那份是干净的空状态模板，同样的 CSS/HTML/JS，改数据对象的方法完全一样）：
 
 - **`PROFILE`** —— 必须和 `profile.json` **完全一致**。这是"编辑档案"标签预填表单用的数据源，是纯前端内存对象，不经过 URL 参数、不经过服务器。改完 `profile.json` 忘了同步改这里，用户点"编辑档案"看到的就是过期数据。
 - **`PLAN`** —— 对应 `training_plan.json` + `moves_library.json` 里已排入计划的动作，改 `nickname / goals / tracks_active / structured / lazy.scenes / changelog`。

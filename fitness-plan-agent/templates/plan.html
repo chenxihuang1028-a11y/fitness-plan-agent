@@ -1,0 +1,1236 @@
+<title>我的见缝插针计划</title>
+<style>
+  :root {
+    --bg: #FFF7EC;
+    --text: #201B2E;
+    --text-soft: #5B5468;
+    --text-faint: #948B9E;
+    --line-soft: #E4D6BE;
+    --line-strong: #201B2E;
+    --card-bg: #201B2E;
+    --card-text: #FFF7EC;
+    --card-text-soft: #B7ACC7;
+    --card-line: #4A4058;
+    --orange: #FF5A36;
+    --orange-strong: #D8431F;
+    --purple: #6C4FF0;
+    --purple-strong: #4C33B8;
+    --warn: #C9683F;
+    --zone-dim: #6A6178;
+    --card-shadow: 0 18px 36px rgba(32,27,46,0.22), 0 3px 8px rgba(32,27,46,0.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1C1420; --text: #F5EFE6; --text-soft: #C3B7CE; --text-faint: #8B7F98;
+      --line-soft: #3B2D45; --line-strong: #F5EFE6;
+      --card-bg: #F5EFE6; --card-text: #1C1420; --card-text-soft: #6B6178; --card-line: #D8CBBE;
+      --orange: #FF7A54; --orange-strong: #FFA485; --purple: #A98CFF; --purple-strong: #C7B4FF;
+      --warn: #E08F65; --zone-dim: #9A90A8;
+      --card-shadow: 0 18px 36px rgba(0,0,0,0.45), 0 3px 8px rgba(0,0,0,0.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1C1420; --text: #F5EFE6; --text-soft: #C3B7CE; --text-faint: #8B7F98;
+    --line-soft: #3B2D45; --line-strong: #F5EFE6;
+    --card-bg: #F5EFE6; --card-text: #1C1420; --card-text-soft: #6B6178; --card-line: #D8CBBE;
+    --orange: #FF7A54; --orange-strong: #FFA485; --purple: #A98CFF; --purple-strong: #C7B4FF;
+    --warn: #E08F65; --zone-dim: #9A90A8;
+    --card-shadow: 0 18px 36px rgba(0,0,0,0.45), 0 3px 8px rgba(0,0,0,0.3);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Segoe UI', sans-serif; }
+  ::selection { background: var(--orange); color: #fff; }
+  code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+
+  /* ---------- 顶部导航 ---------- */
+  .mast {
+    display: flex; justify-content: space-between; align-items: center; padding: 16px 28px;
+    border-bottom: 2px solid var(--line-strong); font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-faint);
+  }
+  .mast b { color: var(--text); font-weight: 700; }
+  .mast-right { display: flex; align-items: center; gap: 20px; }
+  .nav-tab {
+    appearance: none; border: none; background: none; cursor: pointer; font: inherit;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11.5px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-faint); padding: 4px 0 6px; border-bottom: 2px solid transparent;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--text); border-bottom-color: var(--orange); }
+  .edit-link {
+    color: var(--purple-strong); text-decoration: none; border-bottom: 1px solid var(--purple-strong);
+    padding-bottom: 1px; white-space: nowrap; cursor: pointer; background: none; font: inherit; border-top: none; border-left: none; border-right: none;
+  }
+  .edit-link:hover { color: var(--orange-strong); border-bottom-color: var(--orange-strong); }
+
+  /* ================= 计划页 ================= */
+  .plan-shell { max-width: 880px; margin: 0 auto; padding: 40px 24px 90px; }
+
+  .ph-eyebrow {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11.5px; font-weight: 700;
+    letter-spacing: .06em; color: var(--purple-strong); text-transform: uppercase; margin: 0 0 10px;
+  }
+  .plan-shell h1 { font-size: 30px; font-weight: 800; margin: 0 0 14px; letter-spacing: -0.01em; text-wrap: balance; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 22px; padding: 16px 0 28px; border-bottom: 1px solid var(--line-soft); margin-bottom: 30px; }
+  .meta-item { display: flex; flex-direction: column; gap: 3px; }
+  .meta-item .k { font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-faint); font-weight: 700; }
+  .meta-item .v { font-size: 14px; font-weight: 700; }
+
+  .track-h { display: flex; align-items: baseline; gap: 10px; margin: 0 0 6px; }
+  .track-h .ti { font-size: 20px; font-weight: 800; }
+  .track-h .tn { font-size: 12px; color: var(--text-faint); font-weight: 600; }
+  .track-sub { font-size: 12px; color: var(--text-faint); margin: 0 0 18px; line-height: 1.6; }
+  .track-off {
+    border: 1px dashed var(--line-soft); border-radius: 10px; padding: 14px 16px; margin: 14px 0 40px;
+    font-size: 13px; color: var(--text-faint); line-height: 1.6;
+  }
+
+  .scene-h { font-size: 13px; font-weight: 800; color: var(--text-soft); margin: 26px 0 12px; display: flex; align-items: center; gap: 8px; }
+  .scene-h .sn { background: var(--line-soft); color: var(--text); border-radius: 5px; padding: 2px 8px; font-size: 12px; }
+
+  .move-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px; }
+
+  .move-card {
+    background: var(--card-bg); color: var(--card-text); border-radius: 14px; padding: 16px;
+    display: flex; gap: 14px; align-items: flex-start;
+    box-shadow: 0 10px 24px rgba(32,27,46,0.16);
+  }
+  .move-card .diagram { flex: 0 0 auto; width: 64px; }
+  .move-card .diagram svg { width: 100%; height: auto; display: block; }
+  .move-card .body { flex: 1; min-width: 0; }
+  .move-card .m-name { font-size: 14.5px; font-weight: 800; margin: 0 0 4px; line-height: 1.35; }
+  .move-card .m-dose {
+    display: inline-block; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; font-weight: 700;
+    color: var(--orange-strong); background: color-mix(in srgb, var(--orange) 16%, transparent); border-radius: 5px;
+    padding: 2px 7px; margin-bottom: 8px;
+  }
+  .move-card .m-points { list-style: none; margin: 0; padding: 0; }
+  .move-card .m-points li {
+    font-size: 12px; color: var(--card-text-soft); line-height: 1.6; padding-left: 12px; position: relative; margin-bottom: 3px;
+  }
+  .move-card .m-points li::before { content: '–'; position: absolute; left: 0; }
+  .move-card .m-note { font-size: 11px; color: var(--card-text-soft); margin-top: 8px; line-height: 1.5; font-style: italic; }
+  .move-card .m-link {
+    display: inline-flex; align-items: center; margin-top: 10px; font-size: 12px; font-weight: 700;
+    color: var(--orange); text-decoration: none; border-bottom: 1px solid var(--orange); padding-bottom: 1px;
+  }
+  .move-card .m-link:hover { color: var(--orange-strong); border-bottom-color: var(--orange-strong); }
+  .move-card .m-nolink { font-size: 11px; color: var(--card-text-soft); margin-top: 10px; line-height: 1.5; }
+
+  .recovery { margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--line-soft); }
+  .recovery h2 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--text-faint); margin: 0 0 6px; }
+  .recovery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .rec-card {
+    border: 1px solid var(--line-soft); border-radius: 12px; padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .rec-card .rc-muscle { font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--purple-strong); }
+  .rec-card .rc-name { font-size: 14px; font-weight: 800; color: var(--text); }
+  .rec-card .rc-how { font-size: 12.5px; color: var(--text-soft); line-height: 1.6; }
+  .rec-card .rc-caution {
+    font-size: 12px; color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, transparent);
+    border-radius: 6px; padding: 6px 8px; line-height: 1.5; margin-top: 2px;
+  }
+
+  .library { margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--line-soft); }
+  .library h2 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--text-faint); margin: 0 0 6px; }
+  .lib-sub { font-size: 12.5px; color: var(--text-faint); margin: 0 0 16px; line-height: 1.6; }
+  .lib-group-h {
+    font-size: 12px; font-weight: 800; margin: 20px 0 8px; display: flex; align-items: center; gap: 8px;
+  }
+  .lib-group-h .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .lib-group-h.scheduled .dot { background: var(--purple); }
+  .lib-group-h.pending .dot { background: var(--warn); }
+  .lib-group-h.excluded .dot { background: var(--text-faint); }
+  .lib-row {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    padding: 8px 0; border-bottom: 1px dashed var(--line-soft); font-size: 13px;
+  }
+  .lib-row:last-child { border-bottom: none; }
+  .lib-row .ln { font-weight: 700; color: var(--text); flex: 0 0 auto; max-width: 48%; }
+  .lib-row .ls { color: var(--text-faint); font-size: 12px; text-align: right; flex: 1; }
+  .lib-row .ls a { color: var(--purple-strong); text-decoration: none; border-bottom: 1px solid var(--purple-strong); margin-left: 6px; }
+  .lib-row-pick { cursor: pointer; }
+  .lib-pick { position: relative; flex: 0 0 auto; }
+  .lib-pick input { position: absolute; opacity: 0; width: 18px; height: 18px; cursor: pointer; margin: 0; }
+  .lib-pick .box {
+    display: block; width: 16px; height: 16px; border-radius: 4px; border: 2px solid var(--text-faint);
+    position: relative;
+  }
+  .lib-pick .box::after {
+    content: ''; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px;
+    border-right: 2px solid var(--purple); border-bottom: 2px solid var(--purple); transform: rotate(45deg); opacity: 0;
+  }
+  .lib-pick input:checked ~ .box { border-color: var(--purple); }
+  .lib-pick input:checked ~ .box::after { opacity: 1; }
+  .lib-pick-bar { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+  .lib-pick-bar button {
+    appearance: none; border: 2px solid var(--purple); background: none; color: var(--purple-strong);
+    font: inherit; font-size: 12.5px; font-weight: 800; border-radius: 6px; padding: 7px 14px; cursor: pointer;
+    transition: background .12s ease;
+  }
+  .lib-pick-bar button:hover { background: var(--purple); color: #fff; }
+  .lib-pick-note { font-size: 12px; color: var(--text-faint); }
+
+  .changelog { margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--line-soft); }
+  .changelog h2 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--text-faint); margin: 0 0 14px; }
+  .cl-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--line-soft); font-size: 12.5px; }
+  .cl-item:last-child { border-bottom: none; }
+  .cl-date { flex: 0 0 auto; font-family: ui-monospace, 'SF Mono', Menlo, monospace; color: var(--text-faint); font-weight: 700; }
+  .cl-text { color: var(--text-soft); line-height: 1.6; }
+  .cl-text b { color: var(--text); }
+  .cl-tag { display: inline-block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 1px 6px; border-radius: 4px; margin-right: 6px; }
+  .cl-tag.skip { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+  .cl-tag.add { background: color-mix(in srgb, var(--purple) 18%, transparent); color: var(--purple-strong); }
+
+  .foot-note { font-size: 12px; color: var(--text-faint); text-align: center; margin-top: 60px; }
+
+  @media (max-width: 620px) {
+    .move-grid { grid-template-columns: 1fr; }
+    .recovery-grid { grid-template-columns: 1fr; }
+    .plan-shell { padding: 28px 18px 70px; }
+    .plan-shell h1 { font-size: 25px; }
+  }
+
+  /* ================= 编辑档案页 ================= */
+  .edit-shell {
+    max-width: 1080px; margin: 0 auto; padding: 0 28px 90px;
+    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px;
+    align-items: start;
+  }
+  .col-form { padding-top: 40px; min-width: 0; }
+  .col-card { padding-top: 40px; position: sticky; top: 24px; }
+
+  #pageTitle { font-size: 28px; line-height: 1.35; font-weight: 800; margin: 40px 0 10px; letter-spacing: -0.01em; text-wrap: balance; max-width: 20ch; }
+  .lede { font-size: 14.5px; color: var(--text-soft); line-height: 1.75; margin: 0 0 40px; max-width: 48ch; }
+
+  .edit-banner {
+    display: none; font-size: 12.5px; font-weight: 700; color: var(--purple-strong);
+    background: color-mix(in srgb, var(--purple) 12%, var(--bg)); border: 1px solid var(--purple);
+    border-radius: 8px; padding: 10px 14px; margin: 40px 0 20px; line-height: 1.6;
+  }
+  .edit-banner.show { display: block; }
+  .edit-banner.show + #pageTitle { margin-top: 0; }
+
+  .mode-hint { font-size: 12px; color: var(--text-faint); line-height: 1.6; margin: 14px 0 0; }
+
+  .mode-cards { display: flex; border: 2px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+  .mode-card {
+    position: relative; cursor: pointer; flex: 1;
+    padding: 16px 16px 15px; display: flex; flex-direction: column; gap: 4px;
+    transition: background .15s ease, color .15s ease;
+  }
+  .mode-card + .mode-card { border-left: 2px solid var(--line-strong); }
+  .mode-card input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; left: 0; top: 0; }
+  .mode-card .mc-title { font-size: 15px; font-weight: 800; color: var(--text); }
+  .mode-card .mc-sub { font-size: 12px; color: var(--text-faint); line-height: 1.5; }
+  .mode-card:has(input:checked) { background: var(--orange); }
+  .mode-card:has(input:checked) .mc-title,
+  .mode-card:has(input:checked) .mc-sub { color: #fff; }
+  .mode-card input:focus-visible { outline: 2px solid var(--purple); outline-offset: -2px; }
+
+  .track-label { font-size: 12.5px; font-weight: 800; color: var(--text); margin: 0 0 14px; display: flex; align-items: baseline; gap: 8px; }
+  .track-divider { border: none; border-top: 1px dashed var(--line-soft); margin: 26px 0; }
+
+  .edit-shell .section { padding: 22px 0 26px; border-top: 1px solid var(--line-soft); }
+  .edit-shell .section:first-of-type { border-top: none; padding-top: 0; }
+  .section-head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px; }
+  .section-head .idx { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; font-weight: 700; color: var(--orange); }
+  .section-head .st { font-size: 15px; font-weight: 800; color: var(--text); }
+  .section-head .opt { font-size: 12px; color: var(--text-faint); font-weight: 600; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+  .edit-shell label { font-size: 12.5px; font-weight: 700; color: var(--text-soft); }
+  .hint { font-size: 12px; color: var(--text-faint); margin-top: 2px; line-height: 1.5; }
+
+  input[type="text"], input[type="number"], textarea {
+    width: 100%; font: inherit; font-size: 15px; color: var(--text);
+    background: transparent; border: none; border-bottom: 2px solid var(--line-soft);
+    border-radius: 0; padding: 8px 2px; outline: none; transition: border-color .15s ease;
+  }
+  input:focus, textarea:focus { border-bottom-color: var(--orange); }
+  input:focus-visible, textarea:focus-visible, button:focus-visible, .opt-row input:focus-visible ~ .box {
+    outline: 2px solid var(--orange); outline-offset: 3px;
+  }
+  textarea { resize: vertical; min-height: 56px; line-height: 1.6; border: 2px solid var(--line-soft); padding: 10px; }
+  textarea:focus { border-color: var(--orange); }
+
+  .opt-list { display: flex; flex-direction: column; }
+  .opt-row { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--line-soft); cursor: pointer; }
+  .opt-row:last-child { border-bottom: none; }
+  .opt-row input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; left: 0; top: 0; }
+  .opt-row .box {
+    flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; border-radius: 3px; border: 2px solid var(--text-faint);
+    display: flex; align-items: center; justify-content: center; transition: all .12s ease;
+  }
+  .opt-row .box::after {
+    content: ''; width: 8px; height: 4px; border-left: 2px solid var(--bg); border-bottom: 2px solid var(--bg);
+    transform: rotate(-45deg) translateY(-1px); opacity: 0;
+  }
+  .opt-row input:checked ~ .box { background: var(--orange); border-color: var(--orange); }
+  .opt-row input:checked ~ .box::after { opacity: 1; }
+  .opt-row .otxt { font-size: 14px; font-weight: 600; color: var(--text); }
+  .opt-row .osub { font-size: 12px; color: var(--text-faint); margin-top: 1px; }
+  .opt-row:hover .box { border-color: var(--orange); }
+
+  .equip-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+
+  .field-error { display: none; font-size: 12.5px; font-weight: 700; color: var(--warn); margin-top: 10px; }
+
+  .scene-label { font-size: 12.5px; font-weight: 700; color: var(--text-soft); margin: 22px 0 10px; display: flex; align-items: baseline; gap: 8px; }
+  .custom-scene-row { display: flex; gap: 8px; margin-top: 10px; }
+  .custom-scene-row input {
+    flex: 1; font: inherit; font-size: 13.5px; color: var(--text);
+    background: transparent; border: none; border-bottom: 2px solid var(--line-soft); padding: 7px 2px; outline: none;
+  }
+  .custom-scene-row input:focus { border-bottom-color: var(--purple); }
+  .custom-scene-row button {
+    appearance: none; border: 2px solid var(--purple); background: none; color: var(--purple-strong);
+    font: inherit; font-size: 12.5px; font-weight: 800; border-radius: 6px; padding: 0 14px; cursor: pointer;
+    white-space: nowrap; transition: background .12s ease;
+  }
+  .custom-scene-row button:hover { background: var(--purple); color: #fff; }
+  #equipSection.deemph { opacity: 0.55; }
+  #equipLazyHint { display: none; font-size: 12px; color: var(--text-faint); margin: -8px 0 14px; }
+  #equipLazyHint.show { display: block; }
+
+  .slider-field { margin-bottom: 22px; }
+  .slider-field:last-child { margin-bottom: 0; }
+  .slider-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .slider-val { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 22px; font-weight: 800; color: var(--purple-strong); }
+  input[type="range"] { -webkit-appearance: none; width: 100%; height: 2px; background: var(--line-soft); outline: none; margin: 0; }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--purple); cursor: pointer; border: 3px solid var(--bg); box-shadow: 0 0 0 1px var(--purple);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--purple); cursor: pointer;
+    border: 3px solid var(--bg); box-shadow: 0 0 0 1px var(--purple);
+  }
+
+  button.submit {
+    appearance: none; border: 2px solid var(--line-strong); cursor: pointer;
+    background: var(--orange); border-color: var(--orange); color: #fff; font: inherit; font-weight: 800; font-size: 14.5px;
+    letter-spacing: .02em; padding: 15px 22px; border-radius: 6px; width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background .15s ease, transform .08s ease; margin-top: 8px;
+  }
+  button.submit:hover { background: var(--orange-strong); border-color: var(--orange-strong); }
+  button.submit:active { transform: scale(0.99); }
+
+  /* ---- 档案卡（编辑页右侧预览） ---- */
+  .id-card {
+    background: var(--card-bg); color: var(--card-text); border-radius: 14px;
+    padding: 26px 24px 20px; box-shadow: var(--card-shadow); position: relative; overflow: hidden;
+  }
+  .id-card .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+  .id-card .card-serial { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11.5px; letter-spacing: .05em; color: var(--card-text-soft); }
+  #cardMode { color: var(--orange); font-weight: 700; }
+  .id-card .card-status {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--card-line); border-radius: 4px; color: var(--card-text-soft);
+  }
+  .id-card .card-status.done { color: var(--orange); border-color: var(--orange); }
+  .id-card .card-name { font-size: 24px; font-weight: 800; margin: 0 0 22px; min-height: 30px; letter-spacing: -0.01em; }
+  .id-card .card-name.placeholder { color: var(--card-text-soft); font-weight: 700; }
+  .id-card .card-divider { border: none; border-top: 1px dashed var(--card-line); margin: 16px 0; }
+  .id-card .card-stats { display: flex; gap: 28px; }
+  .id-card .card-stat .v { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 26px; font-weight: 800; line-height: 1; }
+  .id-card .card-stat .v .u { font-size: 13px; font-weight: 600; color: var(--card-text-soft); margin-left: 2px; }
+  .id-card .card-stat .l { font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--card-text-soft); margin-top: 6px; }
+  .id-card .id-row { margin-bottom: 4px; }
+  .id-card .id-row .l { font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--card-text-soft); margin-bottom: 5px; }
+  .id-card .id-row .v { font-size: 14px; font-weight: 600; line-height: 1.6; }
+  .id-card .id-row .v.empty { color: var(--card-text-soft); font-weight: 500; }
+  .id-card .id-row .v.flag { color: var(--orange); }
+  .id-card .card-foot {
+    margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--card-line);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 10px; letter-spacing: .06em;
+    color: var(--card-text-soft); text-transform: uppercase;
+  }
+  .card-ribbon {
+    position: absolute; top: 15px; right: -34px; width: 140px; text-align: center;
+    transform: rotate(45deg); background: var(--orange); color: #fff;
+    font-size: 10.5px; font-weight: 800; letter-spacing: .06em; padding: 4px 0; display: none; z-index: 2;
+  }
+  .id-card.lazy .card-ribbon { display: block; }
+  .card-watermark {
+    position: absolute; top: 46%; left: 50%; transform: translate(-50%, -50%) rotate(-18deg);
+    font-size: 46px; font-weight: 800; color: var(--card-text); opacity: 0.06; letter-spacing: .1em;
+    pointer-events: none; white-space: nowrap;
+  }
+
+  .out-actions { display: flex; gap: 18px; margin-top: 16px; flex-wrap: wrap; }
+  .out-actions button {
+    appearance: none; border: none; background: none; cursor: pointer; font: inherit;
+    font-size: 13px; font-weight: 700; color: var(--text); padding: 4px 0;
+    border-bottom: 2px solid var(--orange); display: flex; align-items: center; gap: 6px;
+  }
+  .out-actions button.secondary { color: var(--text-soft); border-bottom-color: var(--line-soft); }
+  .out-actions button:hover { color: var(--orange-strong); border-bottom-color: var(--orange-strong); }
+  .out-actions[hidden] { display: none; }
+
+  .json-box {
+    display: none; margin-top: 16px; border: 1px solid var(--line-soft); border-radius: 6px;
+    padding: 14px; font-size: 11.5px; line-height: 1.65; overflow-x: auto;
+    color: var(--text-soft); font-family: ui-monospace, 'SF Mono', Menlo, monospace; background: transparent;
+  }
+  .json-box.show { display: block; }
+
+  .status-note { font-size: 12px; color: var(--text-faint); margin-top: 10px; min-height: 16px; }
+  .status-note.warn { color: var(--warn); }
+
+  @media (max-width: 860px) {
+    .edit-shell { grid-template-columns: 1fr; gap: 8px; padding: 0 18px 60px; }
+    .col-card { position: static; padding-top: 28px; }
+    .row, .equip-grid { grid-template-columns: 1fr; }
+    .mode-cards { flex-direction: column; }
+    .mode-card + .mode-card { border-left: none; border-top: 2px solid var(--line-strong); }
+    .mast { padding: 14px 18px; }
+  }
+</style>
+
+<div class="mast">
+  <span><b>Fitness Plan Agent</b></span>
+  <span class="mast-right">
+    <span id="updatedLabel">—</span>
+    <button type="button" class="nav-tab active" id="navPlanBtn">查看计划</button>
+    <button type="button" class="nav-tab" id="navEditBtn">编辑档案</button>
+  </span>
+</div>
+
+<!-- ================= 计划页 ================= -->
+<div class="plan-shell" id="planScreen">
+  <p class="ph-eyebrow">当前训练计划</p>
+  <h1>我的见缝插针计划</h1>
+  <div class="meta-row" id="metaRow"></div>
+
+  <div id="structuredSection"></div>
+  <div id="lazySection"></div>
+
+  <div class="recovery">
+    <h2>🩹 肌肉松解 & 康复建议</h2>
+    <p class="lib-sub" id="recoveryNote"></p>
+    <div id="recoveryGrid" class="recovery-grid"></div>
+  </div>
+
+  <div class="library">
+    <h2>🗂️ 动作库（全部识别过的动作，不只是排进计划的）</h2>
+    <p class="lib-sub">每条收藏视频识别出来的动作都存在这里，不管最后有没有排进计划。</p>
+    <div id="libScheduled"></div>
+    <div id="libPending"></div>
+    <div id="libExcluded"></div>
+  </div>
+
+  <div class="changelog">
+    <h2>最近变更</h2>
+    <div id="changelogList"></div>
+  </div>
+
+  <p class="foot-note">Fitness Plan Agent · 数据来自 training_plan.json，本地生成，不上传</p>
+</div>
+
+<!-- ================= 编辑档案页 ================= -->
+<div class="edit-shell" id="editScreen" style="display:none;">
+  <div class="col-form">
+    <p class="edit-banner" id="editBanner">正在编辑已有档案，字段已经按你原来填的数据带出来了，只改你想改的地方，其他保持不动，改完重新提交会生成一份更新后的 profile.json</p>
+    <h1 id="pageTitle">更新你的档案</h1>
+    <p class="lede">这份档案决定了识别新动作、排训练计划时判断适不适合你、冲不冲突。数据只留在这个页面里，不上传到任何服务器，生成后你自己下载带走。</p>
+
+    <form id="profileForm">
+      <div class="section" style="border-top:none; padding-top:0;">
+        <p class="section-head"><span class="st">你平时会遇到哪些训练场景？</span><span class="opt">可多选，两个都勾很正常</span></p>
+        <div class="mode-cards" id="modeGroup">
+          <label class="mode-card">
+            <input type="checkbox" value="structured" id="modeStructured">
+            <span class="mc-title">有时间 / 能去健身房</span>
+            <span class="mc-sub">想要一份按周排的规律课表</span>
+          </label>
+          <label class="mode-card">
+            <input type="checkbox" value="lazy" id="modeLazy">
+            <span class="mc-title">没空 / 想偷懒的时候</span>
+            <span class="mc-sub">需要绑定场景的应急动作，动作可以很简单</span>
+          </label>
+        </div>
+        <p class="field-error" id="modeError">至少选一种场景</p>
+        <p class="mode-hint show">这两个不是"你是哪类人"的固定标签。同一个人完全可能这周有空规律训练，下周很忙只能在沙发上应付几分钟。两条轨道会一起存进你的计划里，当天想用哪个看哪个，不用二选一。</p>
+      </div>
+
+      <div class="section">
+        <p class="section-head"><span class="idx">01</span><span class="st">是谁的档案</span></p>
+        <div class="field">
+          <label for="nickname">昵称</label>
+          <input type="text" id="nickname" placeholder="比如：小茜" autocomplete="off" required>
+          <span class="hint">用于给生成的文件命名，多人共用时区分彼此</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <p class="section-head"><span class="idx">02</span><span class="st">基础身体数据</span></p>
+        <div class="row">
+          <div class="field">
+            <label for="height">身高 (cm)</label>
+            <input type="number" id="height" min="100" max="230" placeholder="165" required>
+          </div>
+          <div class="field">
+            <label for="weight">体重 (kg)</label>
+            <input type="number" id="weight" min="30" max="200" step="0.1" placeholder="60" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <p class="section-head"><span class="idx">03</span><span class="st">训练目标</span><span class="opt">可多选</span></p>
+        <div class="opt-list" id="goalGroup">
+          <label class="opt-row">
+            <input type="checkbox" value="减脂"><span class="box"></span>
+            <span><span class="otxt">减脂</span><span class="osub">降低体脂率，改善体态</span></span>
+          </label>
+          <label class="opt-row">
+            <input type="checkbox" value="增肌"><span class="box"></span>
+            <span><span class="otxt">增肌</span><span class="osub">增加肌肉量和力量</span></span>
+          </label>
+          <label class="opt-row">
+            <input type="checkbox" value="塑形"><span class="box"></span>
+            <span><span class="otxt">塑形</span><span class="osub">局部线条，不追求大幅掉秤</span></span>
+          </label>
+          <label class="opt-row">
+            <input type="checkbox" value="体能提升"><span class="box"></span>
+            <span><span class="otxt">体能提升</span><span class="osub">心肺、耐力、日常不累</span></span>
+          </label>
+          <label class="opt-row">
+            <input type="checkbox" value="康复/恢复性训练"><span class="box"></span>
+            <span><span class="otxt">康复 / 恢复性训练</span><span class="osub">伤后重建、久坐调理</span></span>
+          </label>
+        </div>
+        <p class="field-error" id="goalError">至少选一个训练目标</p>
+      </div>
+
+      <div class="section">
+        <p class="section-head"><span class="idx">04</span><span class="st">训练安排</span><span class="opt">下面两块各自独立，都勾了就都会出现在计划里</span></p>
+        <div id="scheduleStructured">
+          <p class="track-label">📅 规律课表</p>
+          <div class="slider-field">
+            <div class="slider-top"><label for="days">每周能练几天</label><span class="slider-val" id="daysVal">3</span></div>
+            <input type="range" id="days" min="1" max="7" value="3">
+          </div>
+          <div class="slider-field">
+            <div class="slider-top"><label for="minutes">每次大概多久（分钟）</label><span class="slider-val" id="minutesVal">40</span></div>
+            <input type="range" id="minutes" min="10" max="120" step="5" value="40">
+          </div>
+        </div>
+        <hr class="track-divider" id="trackDivider">
+        <div id="scheduleLazy">
+          <p class="track-label">🛋️ 懒人应急池<span class="opt">场景绑定，不用凑时间</span></p>
+          <p class="scene-label" style="margin-top:0;">先认准场景，哪些地方你每天肯定会出现？<span class="opt">可多选</span></p>
+          <div class="opt-list equip-grid" id="sceneGroup">
+            <label class="opt-row"><input type="checkbox" value="床上"><span class="box"></span><span class="otxt">床上</span></label>
+            <label class="opt-row"><input type="checkbox" value="沙发/客厅"><span class="box"></span><span class="otxt">沙发 / 客厅</span></label>
+            <label class="opt-row"><input type="checkbox" value="办公桌前"><span class="box"></span><span class="otxt">办公桌前</span></label>
+            <label class="opt-row"><input type="checkbox" value="厨房台面"><span class="box"></span><span class="otxt">厨房台面</span></label>
+            <label class="opt-row"><input type="checkbox" value="楼梯间/走廊"><span class="box"></span><span class="otxt">楼梯间 / 走廊</span></label>
+            <label class="opt-row"><input type="checkbox" value="通勤/排队等人时"><span class="box"></span><span class="otxt">通勤 / 排队等人时</span></label>
+          </div>
+          <div class="custom-scene-row">
+            <input type="text" id="customSceneInput" placeholder="都没有？自己填一个，比如：阳台" maxlength="20">
+            <button type="button" id="addSceneBtn">+ 加入</button>
+          </div>
+          <p class="field-error" id="sceneError">至少选一个场景，场景才是懒人模式的核心，不是动作</p>
+
+          <div class="slider-field" style="margin-top:24px;">
+            <div class="slider-top"><label for="microMinutes">在场景里，每次大概愿意花几分钟</label><span class="slider-val" id="microMinutesVal">10</span></div>
+            <input type="range" id="microMinutes" min="1" max="60" step="1" value="10">
+          </div>
+          <p class="hint">不用填固定天数，认准上面的场景就行，每次出现在那儿顺手做一下，动作可以很简单，坚持出现比强度重要。</p>
+        </div>
+      </div>
+
+      <div class="section" id="equipSection">
+        <p class="section-head"><span class="idx">05</span><span class="st">可用器械</span><span class="opt">可多选</span></p>
+        <p id="equipLazyHint">懒人模式主要看场景，这里只在有特别器械偏好时再调整，已经帮你勾好"随手动一动"了。</p>
+        <div class="opt-list equip-grid" id="equipGroup">
+          <label class="opt-row"><input type="checkbox" value="什么都没有，只想见缝插针动一动" id="equipNone"><span class="box"></span><span class="otxt">什么都没有，随手动一动</span></label>
+          <label class="opt-row"><input type="checkbox" value="纯自重"><span class="box"></span><span class="otxt">纯自重</span></label>
+          <label class="opt-row"><input type="checkbox" value="哑铃"><span class="box"></span><span class="otxt">哑铃</span></label>
+          <label class="opt-row"><input type="checkbox" value="杠铃"><span class="box"></span><span class="otxt">杠铃</span></label>
+          <label class="opt-row"><input type="checkbox" value="弹力带"><span class="box"></span><span class="otxt">弹力带</span></label>
+          <label class="opt-row"><input type="checkbox" value="瑜伽垫"><span class="box"></span><span class="otxt">瑜伽垫</span></label>
+          <label class="opt-row"><input type="checkbox" value="健身房全套器械"><span class="box"></span><span class="otxt">健身房全套器械</span></label>
+        </div>
+      </div>
+
+      <div class="section">
+        <p class="section-head"><span class="idx">06</span><span class="st">伤病 / 体质限制</span></p>
+        <div class="field">
+          <textarea id="limitations" placeholder="没有就留空。比如：膝盖旧伤，避免深蹲负重过大；久坐腰肌劳损。"></textarea>
+          <span class="hint">这项最重要，排计划时会优先避开和这里冲突的动作</span>
+        </div>
+      </div>
+
+      <button type="submit" class="submit" id="submitBtn">生成更新后的档案</button>
+    </form>
+  </div>
+
+  <div class="col-card">
+    <div class="id-card" id="card">
+      <div class="card-ribbon" id="cardRibbon">随时练</div>
+      <div class="card-watermark" id="cardWatermark">预览</div>
+      <div class="card-top">
+        <span class="card-serial"><span id="cardSerial">NO. ----</span> <span id="cardMode"></span></span>
+        <span class="card-status" id="cardStatus">草稿</span>
+      </div>
+      <div class="card-name placeholder" id="cardName">未命名</div>
+
+      <div class="card-stats">
+        <div class="card-stat"><div class="v" id="cardHeight">--<span class="u">cm</span></div><div class="l">身高</div></div>
+        <div class="card-stat"><div class="v" id="cardWeight">--<span class="u">kg</span></div><div class="l">体重</div></div>
+      </div>
+
+      <hr class="card-divider">
+
+      <div class="id-row"><div class="l">目标</div><div class="v empty" id="cardGoals">未选择</div></div>
+      <div class="id-row" id="cardStructuredRow" style="margin-top:12px;"><div class="l">📅 规律课表</div><div class="v" id="cardSchedule">3 天/周 · 40 分钟</div></div>
+      <div class="id-row" id="cardLazyRow" style="margin-top:12px;"><div class="l">🛋️ 懒人应急</div><div class="v" id="cardMicro">每次约 10 分钟</div></div>
+      <div class="id-row" id="cardSceneRow" style="margin-top:4px;"><div class="l">　常用场景</div><div class="v empty" id="cardScene">未选择</div></div>
+      <div class="id-row" style="margin-top:12px;"><div class="l">器械</div><div class="v" id="cardEquip">未选择</div></div>
+      <div class="id-row" style="margin-top:12px;"><div class="l">限制</div><div class="v empty" id="cardLimits">无特殊限制</div></div>
+
+      <div class="card-foot">Fitness Plan Agent · profile.json</div>
+    </div>
+
+    <div class="out-actions" id="outActions" hidden>
+      <button type="button" id="downloadBtn">↓ 下载 profile.json</button>
+      <button type="button" class="secondary" id="copyBtn">复制 JSON</button>
+    </div>
+    <pre class="json-box" id="jsonOut"></pre>
+    <p class="status-note" id="statusNote"></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ================= 身体分区示意图 ================= */
+  var BODY_SKELETON = {
+    front: '<path d="M50 6a9 9 0 1 0 .01 0Z" />' +
+           '<rect x="33" y="26" width="34" height="52" rx="13" />' +
+           '<rect x="15" y="28" width="13" height="38" rx="6.5" />' +
+           '<rect x="72" y="28" width="13" height="38" rx="6.5" />' +
+           '<rect x="12" y="64" width="11" height="32" rx="5.5" />' +
+           '<rect x="77" y="64" width="11" height="32" rx="5.5" />' +
+           '<rect x="35" y="82" width="14" height="42" rx="7" />' +
+           '<rect x="51" y="82" width="14" height="42" rx="7" />' +
+           '<rect x="36" y="122" width="12" height="36" rx="6" />' +
+           '<rect x="52" y="122" width="12" height="36" rx="6" />',
+    back:  '<path d="M50 6a9 9 0 1 0 .01 0Z" />' +
+           '<rect x="33" y="26" width="34" height="52" rx="13" />' +
+           '<rect x="15" y="28" width="13" height="38" rx="6.5" />' +
+           '<rect x="72" y="28" width="13" height="38" rx="6.5" />' +
+           '<rect x="12" y="64" width="11" height="32" rx="5.5" />' +
+           '<rect x="77" y="64" width="11" height="32" rx="5.5" />' +
+           '<rect x="35" y="82" width="14" height="42" rx="7" />' +
+           '<rect x="51" y="82" width="14" height="42" rx="7" />' +
+           '<rect x="36" y="122" width="12" height="36" rx="6" />' +
+           '<rect x="52" y="122" width="12" height="36" rx="6" />'
+  };
+
+  var ZONES = {
+    front: {
+      shoulders: '<ellipse cx="21.5" cy="33" rx="7" ry="6" /><ellipse cx="78.5" cy="33" rx="7" ry="6" />',
+      chest:     '<ellipse cx="50" cy="41" rx="15" ry="9" />',
+      biceps:    '<ellipse cx="20" cy="46" rx="6" ry="10" /><ellipse cx="80" cy="46" rx="6" ry="10" />',
+      abs:       '<rect x="41" y="55" width="18" height="20" rx="4" />',
+      quads:     '<rect x="36.5" y="86" width="12" height="34" rx="5" /><rect x="51.5" y="86" width="12" height="34" rx="5" />'
+    },
+    back: {
+      reardelt:  '<ellipse cx="21.5" cy="33" rx="7" ry="6" /><ellipse cx="78.5" cy="33" rx="7" ry="6" />',
+      upperback: '<ellipse cx="50" cy="46" rx="16" ry="18" />',
+      triceps:   '<ellipse cx="20" cy="46" rx="6" ry="10" /><ellipse cx="80" cy="46" rx="6" ry="10" />',
+      glutes:    '<ellipse cx="50" cy="88" rx="16" ry="9" />',
+      hamstrings:'<rect x="36.5" y="98" width="12" height="26" rx="5" /><rect x="51.5" y="98" width="12" height="26" rx="5" />',
+      calves:    '<rect x="37" y="126" width="11" height="30" rx="5" /><rect x="52" y="126" width="11" height="30" rx="5" />'
+    }
+  };
+
+  var MUSCLE_MAP = {
+    "背阔肌": ["back", "upperback"], "菱形肌": ["back", "upperback"], "斜方肌": ["back", "upperback"],
+    "斜方肌下束": ["back", "upperback"], "斜方肌中束": ["back", "upperback"], "冈下肌": ["back", "reardelt"],
+    "后三角肌": ["back", "reardelt"], "肱三头肌": ["back", "triceps"], "臀大肌": ["back", "glutes"],
+    "腘绳肌": ["back", "hamstrings"], "小腿": ["back", "calves"], "腓肠肌": ["back", "calves"],
+    "胸大肌": ["front", "chest"], "三角肌前束": ["front", "shoulders"], "前三角肌": ["front", "shoulders"],
+    "肱二头肌": ["front", "biceps"], "腹直肌": ["front", "abs"], "核心": ["front", "abs"],
+    "腹外斜肌": ["front", "abs"], "侧腰": ["front", "abs"],
+    "股四头肌": ["front", "quads"]
+  };
+
+  function deriveDiagram(targetMuscles) {
+    var votes = { front: 0, back: 0 };
+    var zones = { front: [], back: [] };
+    (targetMuscles || []).forEach(function (m) {
+      var hit = MUSCLE_MAP[m];
+      if (!hit) return;
+      votes[hit[0]]++;
+      if (zones[hit[0]].indexOf(hit[1]) === -1) zones[hit[0]].push(hit[1]);
+    });
+    var view = votes.back >= votes.front ? 'back' : 'front';
+    return { view: view, zones: zones[view].length ? zones[view] : Object.keys(ZONES[view]).slice(0, 1) };
+  }
+
+  function renderBodySVG(view, highlightZones) {
+    var svg = '<svg viewBox="0 0 100 165" fill="none" xmlns="http://www.w3.org/2000/svg">';
+    svg += '<g fill="#9A90A8" opacity="0.35">' + BODY_SKELETON[view] + '</g>';
+    Object.keys(ZONES[view]).forEach(function (zoneKey) {
+      var isHit = highlightZones.indexOf(zoneKey) !== -1;
+      svg += '<g fill="' + (isHit ? 'var(--orange)' : 'var(--zone-dim)') + '" opacity="' + (isHit ? '0.95' : '0.28') + '">' + ZONES[view][zoneKey] + '</g>';
+    });
+    svg += '</svg>';
+    return svg;
+  }
+
+  function el(html) { var d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstChild; }
+
+  /* ================= 档案数据：与 profile.json 保持一致 ================= */
+  /* TEMPLATE：这里应该和 profile.json 完全一致。首次建档前就是这个空状态，
+     跑过 Step 0 之后，把 profile.json 的真实内容原样搬过来替换这个对象。 */
+  var PROFILE = {
+    nickname: '',
+    height_cm: null,
+    weight_kg: null,
+    goals: [],
+    training_modes: [],
+    structured: null,
+    lazy: null,
+    equipment: [],
+    limitations: [],
+    updated_at: ''
+  };
+
+  /* ================= 计划数据：对应 training_plan.json + moves_library.json ================= */
+  /* TEMPLATE：完整的 moves_library.json，每处理一条视频往这里加一条
+     { id, name, status, link }。status 文本里含"已排入"会被分到"已排入计划"组，
+     含"不匹配"/"已被"/"不采纳"会被分到"不采纳"组，其余归"待定"组。 */
+  var LIBRARY = [];
+
+  /* ---------- 肌肉松解 & 康复建议：根据当前计划里的 target_muscles 自动生成 ---------- */
+  var MUSCLE_RECOVERY = {
+    '肱三头肌': { stretch: '过顶三头肌拉伸', how: '手臂举过头顶屈肘，另一只手轻压肘部，感受上臂后侧牵拉，30秒/侧', caution: '肘部或肩膀如果是尖锐刺痛（不是酸胀），先停练颈后臂屈伸，别硬撑' },
+    '三角肌': { stretch: '肩后侧拉伸', how: '一只手臂横过胸前，另一只手轻压手肘，感受肩后侧牵拉，30秒/侧', caution: null },
+    '背阔肌': { stretch: '婴儿式伸展', how: '跪姿，臀部坐向脚跟，手臂向前伸展贴地，可以左右移动手臂拉伸背部两侧，保持30-60秒', caution: null },
+    '菱形肌': { stretch: '猫牛式', how: '四足跪姿，吸气塌腰抬头（牛式），呼气拱背含胸（猫式），来回8-10次', caution: null },
+    '斜方肌下束': { stretch: '猫牛式', how: '四足跪姿，吸气塌腰抬头（牛式），呼气拱背含胸（猫式），来回8-10次', caution: null },
+    '腹外斜肌': { stretch: '站姿侧弯拉伸', how: '双脚与肩同宽站立，一只手上举过头顶向对侧倾斜，感受腰侧牵拉，30秒/侧，动作放慢别弹震', caution: '侧腰跟练那组转体幅度较大，腰部有旧伤的话幅度收着点，宁可做小一点' },
+    '核心': { stretch: '眼镜蛇式', how: '俯卧撑地，手臂撑起上身，腹部保持贴地，感受腹部前侧拉伸，30秒', caution: null },
+    '臀大肌': { stretch: '坐姿交叉腿拉伸', how: '坐姿一腿弯曲交叠在另一腿上，身体前倾，感受臀部牵拉，30秒/侧', caution: null },
+    '腘绳肌': { stretch: '坐姿绳肌拉伸', how: '坐姿一腿伸直，身体前倾去够脚尖（不强求碰到），膝盖别过度打直锁死，30秒/侧', caution: null },
+    '股四头肌': { stretch: '站姿股四头肌拉伸', how: '单腿站立，另一只脚跟拉向臀部，膝盖朝下不外翻，扶墙保持平衡，30秒/侧', caution: null }
+  };
+
+  function renderRecovery() {
+    var muscles = [];
+    function collect(list) {
+      (list || []).forEach(function (mv) {
+        (mv.target_muscles || []).forEach(function (mus) {
+          if (muscles.indexOf(mus) === -1) muscles.push(mus);
+        });
+      });
+    }
+    if (PLAN.structured) {
+      Object.keys(PLAN.structured.days || {}).forEach(function (d) { collect(PLAN.structured.days[d]); });
+    }
+    if (PLAN.lazy) {
+      Object.keys(PLAN.lazy.scenes || {}).forEach(function (s) { collect(PLAN.lazy.scenes[s]); });
+    }
+
+    var note = $('recoveryNote');
+    var lims = PROFILE.limitations || [];
+    note.textContent = lims.length
+      ? '根据档案里记录的情况给了针对性提示：' + lims.join('；') + '。想调整就去"编辑档案"改。'
+      : '根据你计划里练到的肌群自动生成，练完对应动作顺手做一下。档案里还没记录伤病史，有旧伤或不适的话去"编辑档案"补充，这里会给针对性提示。';
+
+    var grid = $('recoveryGrid');
+    grid.innerHTML = '';
+    if (muscles.length === 0) {
+      grid.appendChild(el('<p style="font-size:12.5px;color:var(--text-faint);">计划里还没有动作，排完动作这里会自动列出对应的放松建议。</p>'));
+      return;
+    }
+    muscles.forEach(function (mus) {
+      var rec = MUSCLE_RECOVERY[mus];
+      if (!rec) return;
+      var cautionHtml = rec.caution ? '<p class="rc-caution">⚠️ ' + rec.caution + '</p>' : '';
+      grid.appendChild(el(
+        '<div class="rec-card">' +
+          '<span class="rc-muscle">' + mus + '</span>' +
+          '<span class="rc-name">' + rec.stretch + '</span>' +
+          '<span class="rc-how">' + rec.how + '</span>' +
+          cautionHtml +
+        '</div>'
+      ));
+    });
+  }
+
+  function renderLibrary() {
+    ['libScheduled', 'libPending', 'libExcluded'].forEach(function (id) { $(id).innerHTML = ''; });
+    if (LIBRARY.length === 0) {
+      $('libScheduled').appendChild(el('<p style="font-size:12.5px;color:var(--text-faint);">还没有收藏任何视频。把健身视频链接发给 Claude，识别出来的动作都会出现在这里。</p>'));
+      return;
+    }
+    function classify(status) {
+      if (status.indexOf('已排入') !== -1) return 'scheduled';
+      if (status.indexOf('不匹配') !== -1 || status.indexOf('已被') !== -1 || status.indexOf('不采纳') !== -1) return 'excluded';
+      return 'pending';
+    }
+    var groups = { scheduled: [], pending: [], excluded: [] };
+    LIBRARY.forEach(function (m) { groups[classify(m.status)].push(m); });
+
+    var labels = { scheduled: '✅ 已排入计划', pending: '🟡 待定', excluded: '⚪️ 不采纳 / 已替代' };
+    var targets = { scheduled: 'libScheduled', pending: 'libPending', excluded: 'libExcluded' };
+
+    ['scheduled', 'pending', 'excluded'].forEach(function (key) {
+      var container = $(targets[key]);
+      container.innerHTML = '';
+      if (groups[key].length === 0) return;
+      container.appendChild(el('<p class="lib-group-h ' + key + '"><span class="dot"></span>' + labels[key] + '（' + groups[key].length + '）</p>'));
+      groups[key].forEach(function (m) {
+        var linkHtml = m.link ? '<a href="' + m.link + '" target="_blank" rel="noopener">链接 ↗</a>' : '';
+        if (key === 'pending') {
+          container.appendChild(el(
+            '<label class="lib-row lib-row-pick">' +
+              '<span class="lib-pick"><input type="checkbox" class="lib-pick-cb" value="' + m.name + '"><span class="box"></span></span>' +
+              '<span class="ln">' + m.name + '</span><span class="ls">' + m.status + linkHtml + '</span>' +
+            '</label>'
+          ));
+        } else {
+          container.appendChild(el('<div class="lib-row"><span class="ln">' + m.name + '</span><span class="ls">' + m.status + linkHtml + '</span></div>'));
+        }
+      });
+    });
+
+    if (groups.pending.length > 0) {
+      $('libPending').appendChild(el(
+        '<div class="lib-pick-bar">' +
+          '<button type="button" id="libCopyBtn">复制选中清单</button>' +
+          '<span class="lib-pick-note" id="libPickNote">勾选想加入计划的动作，点复制，把内容粘给我就行</span>' +
+        '</div>'
+      ));
+      $('libCopyBtn').addEventListener('click', async function () {
+        var picked = Array.from(document.querySelectorAll('.lib-pick-cb:checked')).map(function (cb) { return cb.value; });
+        var note = $('libPickNote');
+        if (picked.length === 0) {
+          note.textContent = '先勾选至少一个动作';
+          return;
+        }
+        var text = '请把以下动作加入训练计划：\n' + picked.map(function (n) { return '- ' + n; }).join('\n');
+        try {
+          await navigator.clipboard.writeText(text);
+          note.textContent = '已复制 ' + picked.length + ' 项，粘给我就行';
+        } catch (err) {
+          note.textContent = '复制失败，手动记一下：' + picked.join('、');
+        }
+      });
+    }
+  }
+
+  /* TEMPLATE：对应 training_plan.json + moves_library.json 里已排入计划的动作。
+     structured/lazy 为 null 表示对应轨道还没开启，页面会自动显示"还没开启"的引导卡片。
+     lazy.scenes 的 key 是场景名，value 是这个场景里的动作数组（每条动作的字段
+     跟下面示例保持一致：name / target_muscles / dose / points / note / link / link_label）。 */
+  var PLAN = {
+    nickname: '',
+    updated_at: '',
+    goals: [],
+    tracks_active: [],
+    structured: null,
+    lazy: null,
+    changelog: []
+  };
+
+  function buildMoveCard(move) {
+    var diagram = deriveDiagram(move.target_muscles);
+    var pointsHtml = move.points.map(function (p) { return '<li>' + p + '</li>'; }).join('');
+    var noteHtml = move.note ? '<p class="m-note">' + move.note + '</p>' : '';
+    var linkHtml = move.link
+      ? '<a class="m-link" href="' + move.link + '" target="_blank" rel="noopener">' + (move.link_label || '看原视频动作 ↗') + '</a>'
+      : '<p class="m-nolink">还没有参考视频/示范图链接，光看文字和示意图不够的话告诉我，我去找一个补上</p>';
+    return el(
+      '<div class="move-card">' +
+        '<div class="diagram">' + renderBodySVG(diagram.view, diagram.zones) + '</div>' +
+        '<div class="body">' +
+          '<p class="m-name">' + move.name + '</p>' +
+          '<span class="m-dose">' + move.dose + '</span>' +
+          '<ul class="m-points">' + pointsHtml + '</ul>' +
+          noteHtml +
+          linkHtml +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderPlan() {
+    $('updatedLabel').textContent = '更新于 ' + PLAN.updated_at;
+
+    var metaRow = $('metaRow');
+    metaRow.innerHTML = '';
+    var metaItems = [
+      ['昵称', PLAN.nickname],
+      ['训练目标', PLAN.goals.length ? PLAN.goals.join(' · ') : '还没设定'],
+      ['已开启轨道', PLAN.tracks_active.length ? PLAN.tracks_active.map(function (t) { return t === 'lazy' ? '🛋️ 懒人应急池' : '📅 规律课表'; }).join(' + ') : '还没建档']
+    ];
+    metaItems.forEach(function (item) {
+      metaRow.appendChild(el('<div class="meta-item"><span class="k">' + item[0] + '</span><span class="v">' + item[1] + '</span></div>'));
+    });
+
+    var structuredSection = $('structuredSection');
+    structuredSection.innerHTML = '';
+    if (PLAN.structured) {
+      // 结构留待有真实规律课表数据时按同样的 move-grid 方式渲染
+    } else {
+      structuredSection.appendChild(el(
+        '<div>' +
+          '<p class="track-h"><span class="ti">📅 规律课表</span><span class="tn">未开启</span></p>' +
+          '<div class="track-off">还没开启这条轨道，如果以后有时间规律训练，告诉我，或者<button type="button" class="edit-link" id="trackOffEditBtn">编辑档案</button>勾上"有时间/能去健身房"，会加一条轨道进来，不影响现在这份懒人计划。</div>' +
+        '</div>'
+      ));
+      $('trackOffEditBtn').addEventListener('click', function () { switchScreen('edit'); });
+    }
+
+    var lazySection = $('lazySection');
+    lazySection.innerHTML = '';
+    if (!PLAN.lazy) {
+      lazySection.appendChild(el(
+        '<div>' +
+          '<p class="track-h"><span class="ti">🛋️ 懒人应急池</span><span class="tn">未开启</span></p>' +
+          '<div class="track-off">还没开启这条轨道。点<button type="button" class="edit-link" id="lazyOffEditBtn">编辑档案</button>勾上"没空/想偷懒的时候"，填一下常用场景，就能生成一份随时随地能做的应急计划。</div>' +
+        '</div>'
+      ));
+      $('lazyOffEditBtn').addEventListener('click', function () { switchScreen('edit'); });
+    } else {
+      var lazyWrap = el('<div><p class="track-h"><span class="ti">🛋️ 懒人应急池</span><span class="tn">每次约 ' + PLAN.lazy.session_minutes + ' 分钟 · 场景绑定，不用凑时间</span></p><p class="track-sub">人体图只标目标肌群方便一眼看出练哪，具体动作怎么做点卡片上的链接看真实示范。</p></div>');
+      var unlockP = el('<p style="margin:0 0 18px;"><button type="button" class="edit-link" id="unlockSceneBtn">解锁了新场景？点这里更新档案</button></p>');
+      lazyWrap.appendChild(unlockP);
+      Object.keys(PLAN.lazy.scenes).forEach(function (scene) {
+        var moves = PLAN.lazy.scenes[scene];
+        lazyWrap.appendChild(el('<p class="scene-h">📍 <span class="sn">' + scene + '</span></p>'));
+        var grid = el('<div class="move-grid"></div>');
+        moves.forEach(function (m) { grid.appendChild(buildMoveCard(m)); });
+        lazyWrap.appendChild(grid);
+      });
+      lazySection.appendChild(lazyWrap);
+      $('unlockSceneBtn').addEventListener('click', function () { switchScreen('edit'); });
+    }
+
+    var changelogList = $('changelogList');
+    changelogList.innerHTML = '';
+    PLAN.changelog.forEach(function (c) {
+      changelogList.appendChild(el(
+        '<div class="cl-item">' +
+          '<span class="cl-date">' + c.date + '</span>' +
+          '<span class="cl-text"><span class="cl-tag ' + c.tag + '">' + (c.tag === 'skip' ? '未采纳' : '已加入') + '</span>' + c.text + '</span>' +
+        '</div>'
+      ));
+    });
+  }
+
+  /* ================= 编辑档案页逻辑 ================= */
+  var nickname = $('nickname'), heightEl = $('height'), weightEl = $('weight');
+  var daysInput = $('days'), daysVal = $('daysVal');
+  var minutesInput = $('minutes'), minutesVal = $('minutesVal');
+  var microMinutesInput = $('microMinutes'), microMinutesVal = $('microMinutesVal');
+  var limitationsEl = $('limitations');
+  var goalGroup = $('goalGroup'), equipGroup = $('equipGroup'), goalError = $('goalError');
+  var modeGroup = $('modeGroup'), modeError = $('modeError');
+  var modeStructuredCb = $('modeStructured'), modeLazyCb = $('modeLazy');
+  var scheduleStructured = $('scheduleStructured'), scheduleLazy = $('scheduleLazy'), trackDivider = $('trackDivider');
+  var equipNone = $('equipNone'), equipSection = $('equipSection'), equipLazyHint = $('equipLazyHint');
+  var sceneGroup = $('sceneGroup'), sceneError = $('sceneError');
+  var customSceneInput = $('customSceneInput'), addSceneBtn = $('addSceneBtn');
+  var editBanner = $('editBanner'), submitBtn = $('submitBtn');
+
+  var card = $('card'), cardRibbon = $('cardRibbon'), cardWatermark = $('cardWatermark'), cardSerial = $('cardSerial'), cardMode = $('cardMode'), cardStatus = $('cardStatus');
+  var cardName = $('cardName'), cardHeight = $('cardHeight'), cardWeight = $('cardWeight');
+  var cardGoals = $('cardGoals');
+  var cardStructuredRow = $('cardStructuredRow'), cardSchedule = $('cardSchedule');
+  var cardLazyRow = $('cardLazyRow'), cardMicro = $('cardMicro');
+  var cardSceneRow = $('cardSceneRow'), cardScene = $('cardScene');
+  var cardEquip = $('cardEquip'), cardLimits = $('cardLimits');
+
+  var form = $('profileForm');
+  var outActions = $('outActions'), jsonOut = $('jsonOut'), statusNote = $('statusNote');
+
+  var lastProfile = null;
+  var lastFilename = 'profile.json';
+  var submitted = false;
+
+  function todayISO() {
+    var d = new Date();
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+  function slugify(name) {
+    return name.trim().replace(/\s+/g, '-').replace(/[^\w一-龥-]/g, '') || 'user';
+  }
+  function serialFor(name) {
+    var h = 0;
+    var s = name || 'guest';
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return 'NO. ' + String(h % 9000 + 1000);
+  }
+  function checkedValues(container) {
+    return Array.from(container.querySelectorAll('input:checked')).map(function (elm) { return elm.value; });
+  }
+  function setCheckedByValues(container, values) {
+    var vals = values || [];
+    Array.from(container.querySelectorAll('input[type="checkbox"]')).forEach(function (input) {
+      input.checked = vals.indexOf(input.value) !== -1;
+    });
+  }
+
+  function renderCard() {
+    var nameVal = nickname.value.trim();
+    cardSerial.textContent = serialFor(nameVal);
+    cardName.textContent = nameVal || '未命名';
+    cardName.classList.toggle('placeholder', !nameVal);
+
+    cardHeight.innerHTML = (heightEl.value ? heightEl.value : '--') + '<span class="u">cm</span>';
+    cardWeight.innerHTML = (weightEl.value ? weightEl.value : '--') + '<span class="u">kg</span>';
+
+    var goals = checkedValues(goalGroup);
+    cardGoals.textContent = goals.length ? goals.join(' · ') : '未选择';
+    cardGoals.classList.toggle('empty', goals.length === 0);
+
+    var hasStructured = modeStructuredCb.checked;
+    var hasLazy = modeLazyCb.checked;
+    card.classList.toggle('lazy', hasLazy);
+    cardMode.textContent = hasStructured && hasLazy ? '[双轨]' : hasLazy ? '[懒人应急]' : hasStructured ? '[规律课表]' : '';
+
+    cardStructuredRow.style.display = hasStructured ? '' : 'none';
+    if (hasStructured) {
+      cardSchedule.textContent = daysInput.value + ' 天/周 · ' + minutesInput.value + ' 分钟';
+    }
+
+    cardLazyRow.style.display = hasLazy ? '' : 'none';
+    cardSceneRow.style.display = hasLazy ? '' : 'none';
+    if (hasLazy) {
+      cardMicro.textContent = '每次约 ' + microMinutesInput.value + ' 分钟';
+      var scenes = checkedValues(sceneGroup);
+      cardScene.textContent = scenes.length ? scenes.join(' · ') : '未选择';
+      cardScene.classList.toggle('empty', scenes.length === 0);
+    }
+
+    var equip = checkedValues(equipGroup);
+    cardEquip.textContent = equip.length ? equip.join(' · ') : '未选择';
+    cardEquip.classList.toggle('empty', equip.length === 0);
+
+    var limVal = limitationsEl.value.trim();
+    cardLimits.textContent = limVal ? limVal : '无特殊限制';
+    cardLimits.classList.toggle('empty', !limVal);
+    cardLimits.classList.toggle('flag', !!limVal);
+
+    if (!submitted) {
+      cardWatermark.style.display = '';
+      cardStatus.textContent = '草稿';
+      cardStatus.classList.remove('done');
+    }
+  }
+
+  function addCustomScene(value) {
+    var val = (value !== undefined ? value : customSceneInput.value).trim();
+    if (!val) return;
+    var existing = Array.from(sceneGroup.querySelectorAll('input')).map(function (elm) { return elm.value.toLowerCase(); });
+    if (existing.indexOf(val.toLowerCase()) !== -1) { if (value === undefined) customSceneInput.value = ''; return; }
+
+    var label = document.createElement('label');
+    label.className = 'opt-row';
+    label.innerHTML = '<input type="checkbox" checked><span class="box"></span><span class="otxt"></span>';
+    label.querySelector('input').value = val;
+    label.querySelector('.otxt').textContent = val;
+    sceneGroup.appendChild(label);
+
+    if (value === undefined) { customSceneInput.value = ''; renderCard(); }
+  }
+  addSceneBtn.addEventListener('click', function () { addCustomScene(); });
+  customSceneInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); addCustomScene(); }
+  });
+
+  [nickname, heightEl, weightEl, limitationsEl].forEach(function (elm) { elm.addEventListener('input', renderCard); });
+  goalGroup.addEventListener('change', renderCard);
+  equipGroup.addEventListener('change', renderCard);
+  sceneGroup.addEventListener('change', renderCard);
+  daysInput.addEventListener('input', function () { daysVal.textContent = daysInput.value; renderCard(); });
+  minutesInput.addEventListener('input', function () { minutesVal.textContent = minutesInput.value; renderCard(); });
+  microMinutesInput.addEventListener('input', function () { microMinutesVal.textContent = microMinutesInput.value; renderCard(); });
+
+  function applyModeVisibility() {
+    var hasStructured = modeStructuredCb.checked;
+    var hasLazy = modeLazyCb.checked;
+    scheduleStructured.style.display = hasStructured ? '' : 'none';
+    scheduleLazy.style.display = hasLazy ? '' : 'none';
+    trackDivider.style.display = (hasStructured && hasLazy) ? '' : 'none';
+    equipSection.classList.toggle('deemph', hasLazy && !hasStructured);
+    equipLazyHint.classList.toggle('show', hasLazy && !hasStructured);
+    modeError.style.display = (hasStructured || hasLazy) ? 'none' : 'block';
+  }
+  modeGroup.addEventListener('change', function () {
+    applyModeVisibility();
+    renderCard();
+  });
+
+  function prefillFromProfile(p) {
+    if (!p) return;
+    nickname.value = p.nickname || '';
+    heightEl.value = p.height_cm || '';
+    weightEl.value = p.weight_kg || '';
+    setCheckedByValues(goalGroup, p.goals);
+
+    modeStructuredCb.checked = !!(p.training_modes && p.training_modes.indexOf('structured') !== -1);
+    modeLazyCb.checked = !!(p.training_modes && p.training_modes.indexOf('lazy') !== -1);
+
+    if (p.structured) {
+      daysInput.value = p.structured.days_per_week || daysInput.value;
+      minutesInput.value = p.structured.session_minutes || minutesInput.value;
+      daysVal.textContent = daysInput.value;
+      minutesVal.textContent = minutesInput.value;
+    }
+    if (p.lazy) {
+      microMinutesInput.value = p.lazy.session_minutes || microMinutesInput.value;
+      microMinutesVal.textContent = microMinutesInput.value;
+      (p.lazy.scenes || []).forEach(function (scene) {
+        var existing = Array.from(sceneGroup.querySelectorAll('input')).map(function (elm) { return elm.value; });
+        if (existing.indexOf(scene) === -1) addCustomScene(scene);
+      });
+      setCheckedByValues(sceneGroup, p.lazy.scenes);
+    }
+
+    setCheckedByValues(equipGroup, p.equipment);
+    limitationsEl.value = (p.limitations || []).join('\n');
+
+    editBanner.classList.add('show');
+    applyModeVisibility();
+    renderCard();
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var goals = checkedValues(goalGroup);
+    if (goals.length === 0) {
+      goalError.style.display = 'block';
+      goalGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    goalError.style.display = 'none';
+
+    var hasStructured = modeStructuredCb.checked;
+    var hasLazy = modeLazyCb.checked;
+    if (!hasStructured && !hasLazy) {
+      modeError.style.display = 'block';
+      modeGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    modeError.style.display = 'none';
+
+    var scenes = checkedValues(sceneGroup);
+    if (hasLazy && scenes.length === 0) {
+      sceneError.style.display = 'block';
+      sceneGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    sceneError.style.display = 'none';
+
+    var profile = {
+      nickname: nickname.value.trim(),
+      height_cm: Number(heightEl.value),
+      weight_kg: Number(weightEl.value),
+      goals: goals,
+      training_modes: [hasStructured ? 'structured' : null, hasLazy ? 'lazy' : null].filter(Boolean),
+      structured: hasStructured ? {
+        days_per_week: Number(daysInput.value),
+        session_minutes: Number(minutesInput.value)
+      } : null,
+      lazy: hasLazy ? {
+        session_minutes: Number(microMinutesInput.value),
+        scenes: scenes
+      } : null,
+      equipment: checkedValues(equipGroup),
+      limitations: limitationsEl.value.trim()
+        ? limitationsEl.value.trim().split(/\n|[;；]/).map(function (s) { return s.trim(); }).filter(Boolean)
+        : [],
+      updated_at: todayISO()
+    };
+
+    lastProfile = profile;
+    lastFilename = 'profile-' + slugify(profile.nickname) + '.json';
+    submitted = true;
+
+    cardWatermark.style.display = 'none';
+    cardStatus.textContent = '已建档';
+    cardStatus.classList.add('done');
+
+    jsonOut.textContent = JSON.stringify(profile, null, 2);
+    jsonOut.classList.add('show');
+    outActions.hidden = false;
+    statusNote.textContent = '';
+    statusNote.className = 'status-note';
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  $('downloadBtn').addEventListener('click', async function () {
+    if (!lastProfile) return;
+    var data = JSON.stringify(lastProfile, null, 2);
+    var downloads = await (window.claude && window.claude.use ? window.claude.use('downloads') : Promise.resolve(null));
+
+    if (downloads) {
+      try {
+        await downloads.save({ filename: lastFilename, data: data });
+        statusNote.textContent = '已保存，请把它发给 Claude 更新到 ~/Documents/fitness-plan-agent-data/profile.json';
+        statusNote.className = 'status-note';
+      } catch (err) {
+        statusNote.textContent = '保存被取消或不可用（' + (err && err.code ? err.code : 'unknown') + '）。可以用"复制 JSON"代替。';
+        statusNote.className = 'status-note warn';
+      }
+    } else {
+      statusNote.textContent = '这个环境不支持直接下载，请点"复制 JSON"手动粘贴保存。';
+      statusNote.className = 'status-note warn';
+    }
+  });
+
+  $('copyBtn').addEventListener('click', async function () {
+    if (!lastProfile) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(lastProfile, null, 2));
+      statusNote.textContent = '已复制到剪贴板。';
+      statusNote.className = 'status-note';
+    } catch (err) {
+      statusNote.textContent = '复制失败，请手动选中上面的文本复制。';
+      statusNote.className = 'status-note warn';
+    }
+  });
+
+  /* ================= 页面切换 ================= */
+  var planScreen = $('planScreen'), editScreen = $('editScreen');
+  var navPlanBtn = $('navPlanBtn'), navEditBtn = $('navEditBtn');
+
+  function switchScreen(name) {
+    var showPlan = name === 'plan';
+    planScreen.style.display = showPlan ? '' : 'none';
+    editScreen.style.display = showPlan ? 'none' : '';
+    navPlanBtn.classList.toggle('active', showPlan);
+    navEditBtn.classList.toggle('active', !showPlan);
+    if (!showPlan) prefillFromProfile(PROFILE);
+    window.scrollTo(0, 0);
+  }
+  navPlanBtn.addEventListener('click', function () { switchScreen('plan'); });
+  navEditBtn.addEventListener('click', function () { switchScreen('edit'); });
+  window.switchScreen = switchScreen;
+
+  renderPlan();
+  renderRecovery();
+  renderLibrary();
+  applyModeVisibility();
+  renderCard();
+})();
+</script>

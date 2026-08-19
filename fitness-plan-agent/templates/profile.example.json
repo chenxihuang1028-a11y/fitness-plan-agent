@@ -1,0 +1,12 @@
+{
+  "nickname": "小茜",
+  "height_cm": 165,
+  "weight_kg": 60,
+  "goals": ["减脂", "塑形"],
+  "training_modes": ["structured", "lazy"],
+  "structured": { "days_per_week": 3, "session_minutes": 40 },
+  "lazy": { "session_minutes": 10, "scenes": ["床上", "沙发/客厅", "办公桌前"] },
+  "equipment": ["哑铃", "瑜伽垫"],
+  "limitations": ["膝盖旧伤，避免深蹲负重过大"],
+  "updated_at": "2026-08-18"
+}
