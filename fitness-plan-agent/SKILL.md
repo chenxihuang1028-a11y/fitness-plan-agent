@@ -32,12 +32,14 @@ description: 把随手收藏的健身视频链接（小红书/抖音/YouTube/B�
 
 ```bash
 mkdir -p ~/Documents/fitness-plan-agent-data
-cp templates/plan.html ~/Documents/fitness-plan-agent-data/plan.html
-cp templates/moves_library.example.json ~/Documents/fitness-plan-agent-data/moves_library.json
-cp templates/training_plan.example.json ~/Documents/fitness-plan-agent-data/training_plan.json
-cp templates/CURRENT_PLAN.example.md ~/Documents/fitness-plan-agent-data/CURRENT_PLAN.md
-cp templates/intake_log.example.md ~/Documents/fitness-plan-agent-data/intake_log.md
+cp ~/.claude/skills/fitness-plan-agent/templates/plan.html ~/Documents/fitness-plan-agent-data/plan.html
+cp ~/.claude/skills/fitness-plan-agent/templates/moves_library.example.json ~/Documents/fitness-plan-agent-data/moves_library.json
+cp ~/.claude/skills/fitness-plan-agent/templates/training_plan.example.json ~/Documents/fitness-plan-agent-data/training_plan.json
+cp ~/.claude/skills/fitness-plan-agent/templates/CURRENT_PLAN.example.md ~/Documents/fitness-plan-agent-data/CURRENT_PLAN.md
+cp ~/.claude/skills/fitness-plan-agent/templates/intake_log.example.md ~/Documents/fitness-plan-agent-data/intake_log.md
 ```
+
+（用绝对路径，不依赖当前工作目录在哪；如果这个 Skill 装在别的路径，把 `~/.claude/skills/fitness-plan-agent` 换成实际路径。）
 
 `profile.json` 不从模板复制，走「Step 0 建档」生成真实数据（`templates/profile.example.json` 只是给自己看字段长什么样用的参考）。复制完再执行「Step 0 建档」。
 

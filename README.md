@@ -47,8 +47,9 @@ cp -R fitness-plan-agent ~/.claude/skills/
 
 ### 首次使用（跟 Claude 说一遍就行，不用自己动手）
 
-1. **初始化数据目录**：把 `templates/` 下的文件复制到 `~/Documents/fitness-plan-agent-data/`，去掉 `.example` 后缀（`plan.html` 除外，直接用）。
+1. **初始化数据目录**：把 `templates/` 下的文件复制到 `~/Documents/fitness-plan-agent-data/`，去掉 `.example` 后缀（`plan.html` 除外，直接用）。下面命令假设当前目录是安装好的 `~/.claude/skills/fitness-plan-agent`（也就是 `templates/` 的上一级）：
    ```bash
+   cd ~/.claude/skills/fitness-plan-agent
    mkdir -p ~/Documents/fitness-plan-agent-data
    cp templates/plan.html ~/Documents/fitness-plan-agent-data/plan.html
    cp templates/moves_library.example.json ~/Documents/fitness-plan-agent-data/moves_library.json
